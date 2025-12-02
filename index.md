@@ -6,7 +6,7 @@ Shared documentation for hybrid application projects.
 
 - [Quick Start Guide](./quick_start.md)
 
-## Formal Documentation
+## Template Documentation
 
 - [Software Requirements Specification](./templates/software_requirements_specification.md)
 - [Software Design Specification](./templates/software_design_specification.md)
