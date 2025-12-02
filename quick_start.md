@@ -487,8 +487,8 @@ cat test/common/test_framework.ads
 
 ### Learn Dependency Injection
 
-- **[Static Dispatch](diagrams/static_dispatch.svg)** - Generic-based DI pattern
-- **[Static vs Dynamic](diagrams/dynamic_static_dispatch.svg)** - Pattern comparison
+- **[Static Dispatch (Ada)](diagrams/static_dispatch_ada.svg)** - Generic-based DI pattern
+- **[Static vs Dynamic (Ada)](diagrams/dynamic_static_dispatch_ada.svg)** - Pattern comparison
 - See Bootstrap wiring examples
 - Understand compile-time polymorphism
 

@@ -21,11 +21,23 @@ Shared documentation for hybrid application projects.
 
 ## Diagrams
 
-- [API Re-export Pattern](./diagrams/api_reexport_pattern.svg)
-- [Application Error Pattern](./diagrams/application_error_pattern.svg)
-- [Dynamic Static Dispatch](./diagrams/dynamic_static_dispatch.svg)
-- [Error Handling Flow](./diagrams/error_handling_flow.svg)
+### Language-Agnostic
 - [Layer Dependencies](./diagrams/layer_dependencies.svg)
-- [Package Structure](./diagrams/package_structure.svg)
-- [Static Dispatch](./diagrams/static_dispatch.svg)
-- [Three Package API](./diagrams/three_package_api.svg)
+
+### Ada Examples
+- [API Re-export Pattern (Ada)](./diagrams/ada/api_reexport_pattern_ada.svg)
+- [Application Error Pattern (Ada)](./diagrams/ada/application_error_pattern_ada.svg)
+- [Dynamic Static Dispatch (Ada)](./diagrams/ada/dynamic_static_dispatch_ada.svg)
+- [Error Handling Flow (Ada)](./diagrams/ada/error_handling_flow_ada.svg)
+- [Package Structure (Ada)](./diagrams/ada/package_structure_ada.svg)
+- [Static Dispatch (Ada)](./diagrams/ada/static_dispatch_ada.svg)
+- [Three Package API (Ada)](./diagrams/ada/three_package_api_ada.svg)
+
+### Go Examples
+- [API Re-export Pattern (Go)](./diagrams/go/api_reexport_pattern_go.svg)
+- [Application Error Pattern (Go)](./diagrams/go/application_error_pattern_go.svg)
+- [Dynamic Static Dispatch (Go)](./diagrams/go/dynamic_static_dispatch_go.svg)
+- [Error Handling Flow (Go)](./diagrams/go/error_handling_flow_go.svg)
+- [Package Structure (Go)](./diagrams/go/package_structure_go.svg)
+- [Static Dispatch (Go)](./diagrams/go/static_dispatch_go.svg)
+- [Three Package API (Go)](./diagrams/go/three_package_api_go.svg)
