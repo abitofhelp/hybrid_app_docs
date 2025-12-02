@@ -8,9 +8,9 @@ Shared documentation for hybrid application projects.
 
 ## Formal Documentation
 
-- [Software Requirements Specification](./formal/software_requirements_specification.md)
-- [Software Design Specification](./formal/software_design_specification.md)
-- [Software Test Guide](./formal/software_test_guide.md)
+- [Software Requirements Specification](./templates/software_requirements_specification.md)
+- [Software Design Specification](./templates/software_design_specification.md)
+- [Software Test Guide](./templates/software_test_guide.md)
 
 ## Guides
 

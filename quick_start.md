@@ -437,7 +437,7 @@ ls -lh test/bin/
 
 ### Explore the Architecture
 
-- **[Software Design Specification](formal/software_design_specification.md)** - Deep dive into architecture
+- **[Software Design Specification](templates/software_design_specification.md)** - Deep dive into architecture
 - **[Architecture Diagrams](diagrams/)** - Visual documentation
 - **[Layer Dependencies](diagrams/layer_dependencies.svg)** - See dependency flow
 
@@ -508,9 +508,9 @@ Follow the pattern:
 ## Documentation Index
 
 - **[Main Documentation Hub](index.md)** - All documentation links
-- **[Software Requirements Specification](formal/software_requirements_specification.md)** - Requirements
-- **[Software Design Specification](formal/software_design_specification.md)** - Architecture
-- **[Software Test Guide](formal/software_test_guide.md)** - Testing guide
+- **[Software Requirements Specification](templates/software_requirements_specification.md)** - Requirements
+- **[Software Design Specification](templates/software_design_specification.md)** - Architecture
+- **[Software Test Guide](templates/software_test_guide.md)** - Testing guide
 - **[Roadmap](roadmap.md)** - Future development plans
 
 ---
