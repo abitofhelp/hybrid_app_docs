@@ -14,7 +14,6 @@ Shared documentation for hybrid application projects.
 
 ## Guides
 
-- [All About Our API](./guides/all_about_our_api.md)
 - [Architecture Enforcement](./guides/architecture_enforcement.md)
 - [Build Profiles](./guides/build_profiles.md)
 - [Error Handling Strategy](./guides/error_handling_strategy.md)
