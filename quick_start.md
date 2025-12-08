@@ -46,6 +46,7 @@ make build
 - **GNAT** 14+ (via Alire toolchain)
 - **Make** (for convenience targets)
 - **Python 3** (for architecture validation)
+- **Java 11+** (optional, for PlantUML diagram generation)
 
 #### Installing Alire
 
@@ -70,6 +71,8 @@ ls -lh bin/greeter
 ./bin/greeter World
 # Output: Hello, World!
 ```
+
+**Success!** You've built your first hexagonal architecture application in Ada 2022.
 
 ---
 
@@ -211,6 +214,13 @@ Exit Code (0 or 1)
 | Presentation | UI (driving) | Application ONLY |
 | Bootstrap | DI wiring | ALL |
 
+### Responsibility Separation
+
+- **Domain**: Provides data (Get_Name) and validates business rules
+- **Application**: Formats output (Format_Greeting), orchestrates use cases
+- **Infrastructure**: Implements technical concerns (console I/O)
+- **Presentation**: Handles user interaction, maps errors to messages
+
 ---
 
 ## Making Your First Change
@@ -258,6 +268,8 @@ make test-all
 ./bin/greeter Alice
 # Output: Greetings, Alice!
 ```
+
+**Best Practice**: Always run tests after making changes. This project has 90 tests ensuring correctness.
 
 ---
 
@@ -368,15 +380,33 @@ make test-e2e
 
 Hybrid_App_Ada supports code coverage analysis using GNATcoverage.
 
+#### First-Time Setup
+
+Before running coverage analysis for the first time, you need to build the GNATcoverage runtime library:
+
 ```bash
-# First-time setup: Build coverage runtime
+# Build the coverage runtime (one-time setup)
 make build-coverage-runtime
 
-# Run tests with coverage
+# This will:
+# - Locate your GNATcoverage installation
+# - Build the runtime library from sources
+# - Install it to external/gnatcov_rts/
+```
+
+#### Running Coverage Analysis
+
+```bash
+# Run tests with GNATcoverage analysis
 make test-coverage
 
-# Reports generated in coverage/ directory
+# View coverage report
+# Coverage reports generated in coverage/ directory
+# - coverage/index.html - HTML coverage report
+# - coverage/*.xcov - Detailed coverage files
 ```
+
+**Test Framework**: Custom lightweight framework (no AUnit dependency) located in `test/common/test_framework.{ads,adb}`
 
 ---
 
@@ -463,6 +493,15 @@ make check-arch
 
 ```bash
 ls -lh test/bin/
+# Output:
+# unit_runner
+# test_domain_error_result
+# test_domain_person
+# test_application_command_greet
+# test_application_usecase_greet
+# test_greet_full_flow
+# test_infrastructure_console_writer
+# test_greeter_cli
 ```
 
 ### Q: How do I run a single test?
@@ -477,25 +516,62 @@ ls -lh test/bin/
 
 ## Next Steps
 
-- **[Documentation Index](index.md)** - Complete documentation overview
-- **[Software Design Specification](templates/software_design_specification.md)** - Architecture deep dive
-- **[Software Test Guide](templates/software_test_guide.md)** - Testing strategy
-- **[Architecture Enforcement](guides/architecture_enforcement.md)** - Layer dependency rules
-- **[Error Handling Strategy](guides/error_handling_strategy.md)** - Result monad patterns
+### Explore the Architecture
 
-### Explore the Source
+- **[Software Design Specification](templates/software_design_specification.md)** - Deep dive into architecture
+- **[Architecture Diagrams](diagrams/)** - Visual documentation
+- **[Application Architecture](diagrams/application_architecture.svg)** - See dependency flow
+
+### Read the Source Code
+
+Start with the wiring in Bootstrap:
 
 ```bash
 # See how all layers are wired together
 cat src/bootstrap/cli/bootstrap-cli.adb
+```
 
-# Explore each layer
+Then explore each layer:
+
+```bash
+# Domain (pure business logic)
 ls src/domain/
+
+# Application (use cases and ports)
 ls src/application/
+
+# Infrastructure (adapters)
 ls src/infrastructure/
+
+# Presentation (CLI)
 ls src/presentation/
+
+# Bootstrap (composition root)
 ls src/bootstrap/
 ```
+
+### Study the Test Suite
+
+```bash
+# See how tests are organized
+ls -R test/
+
+# Read test framework
+cat test/common/test_framework.ads
+```
+
+### Understand Error Handling
+
+- See how Result monads replace exceptions
+- Study error propagation patterns
+- Learn the Application.Error re-export pattern
+
+### Learn Dependency Injection
+
+- **[Static Dispatch (Ada)](diagrams/ada/static_dispatch_ada.svg)** - Generic-based DI pattern
+- **[Static vs Dynamic (Ada)](diagrams/ada/dynamic_static_dispatch_ada.svg)** - Pattern comparison
+- See Bootstrap wiring examples
+- Understand compile-time polymorphism
 
 ### Add Your Own Use Case
 
@@ -510,5 +586,25 @@ Follow the pattern:
 
 ---
 
+## Documentation Index
+
+- **[Main Documentation Hub](index.md)** - All documentation links
+- **[Software Requirements Specification](templates/software_requirements_specification.md)** - Requirements
+- **[Software Design Specification](templates/software_design_specification.md)** - Architecture
+- **[Software Test Guide](templates/software_test_guide.md)** - Testing guide
+
+---
+
+## Support
+
+For questions, issues, or contributions:
+
+- **Issues**: [GitHub Issues](https://github.com/abitofhelp/hybrid_app_ada/issues)
+- **Documentation**: See `docs/` directory
+
+---
+
 **License:** BSD-3-Clause
 **Copyright:** 2025 Michael Gardner, A Bit of Help, Inc.
+
+See [LICENSE](../LICENSE) for full license text.
