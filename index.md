@@ -1,11 +1,11 @@
 # Hybrid Application Documentation
 
-**Version:** 2.0.0<br>
-**Date:** 2025-12-08<br>
+**Version:** 2.0.0  
+**Date:** December 09, 2025  
 **SPDX-License-Identifier:** BSD-3-Clause<br>
 **License File:** See the LICENSE file in the project root<br>
-**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>
-**Status:** Released
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>  
+**Status:** Released  
 
 ---
 
@@ -152,5 +152,5 @@ Hybrid applications implement a 5-layer hexagonal architecture:
 
 ---
 
-**License:** BSD-3-Clause
-**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.
+**License:** BSD-3-Clause  
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.  
