@@ -1,10 +1,10 @@
 # Hybrid Application Documentation
 
-**Version:** 1.0.0
-**Date:** December 08, 2025
+**Version:** 2.0.0<br>
+**Date:** 2025-12-08<br>
 **SPDX-License-Identifier:** BSD-3-Clause<br>
 **License File:** See the LICENSE file in the project root<br>
-**Copyright:** 2025 Michael Gardner, A Bit of Help, Inc.<br>
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>
 **Status:** Released
 
 ---
@@ -125,6 +125,24 @@ Hybrid applications implement a 5-layer hexagonal architecture:
 
 ---
 
+## What's New in v2.0.0
+
+**Breaking Changes:**
+- Upgraded to functional ^3.0.0 with new Result combinator APIs
+
+**New Features:**
+- Windows CI support (GitHub Actions)
+- Result combinators: Bimap, Ensure, With_Context, Fallback, Recover, Tap
+- Enhanced error handling capabilities
+
+**Test Coverage:**
+- 85 unit tests
+- 16 integration tests
+- 0 e2e tests
+- **Total: 101 tests** (all passing)
+
+---
+
 ## Need Help?
 
 - Check the [Quick Start Guide](quick_start.md) for common issues
@@ -135,4 +153,4 @@ Hybrid applications implement a 5-layer hexagonal architecture:
 ---
 
 **License:** BSD-3-Clause
-**Copyright:** 2025 Michael Gardner, A Bit of Help, Inc.
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.

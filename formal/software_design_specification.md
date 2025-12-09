@@ -1,11 +1,11 @@
 # Software Design Specification
 
-**Version:** 1.0.0<br>
-**Date:** 2025-11-29<br>
+**Version:** 2.0.0  
+**Date:** December 08, 2025  
 **SPDX-License-Identifier:** BSD-3-Clause<br>
 **License File:** See the LICENSE file in the project root<br>
-**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>
-**Status:** Released
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>  
+**Status:** Released  
 
 ---
 
@@ -714,12 +714,94 @@ test/
 - **Integration**: Test Application with real Infrastructure
 - **E2E**: Test via CLI (black-box testing)
 
+### 11.3 Version 2.0.0 Test Metrics
+
+**Test Counts:**
+- 85 unit tests
+- 16 integration tests
+- 0 e2e tests
+- **Total: 101 tests** (all passing)
+
+**Coverage:**
+- Domain Layer: High (pure functions, fully tested)
+- Application Layer: High (use cases covered)
+- Infrastructure Layer: Adequate (integration tests)
+
+---
+
+## 12. Version 2.0.0 Enhancements
+
+### 12.1 Result Combinator Patterns
+
+**New in v2.0.0**: functional ^3.0.0 brings powerful combinators for Result manipulation.
+
+#### Bimap - Dual Transformation
+```ada
+-- Transform both Ok and Error values in one operation
+Result.Bimap (
+   Ok_Fn    => To_Upper'Access,
+   Error_Fn => Add_Context'Access
+);
+```
+
+#### Ensure - Postcondition Validation
+```ada
+-- Add validation after successful operation
+Result.Ensure (
+   Predicate => Is_Valid'Access,
+   On_Failure => "Validation failed after operation"
+);
+```
+
+#### With_Context - Error Enrichment
+```ada
+-- Add contextual information to errors
+Result.With_Context ("While processing user: " & User_Id);
+```
+
+#### Fallback - Default Values
+```ada
+-- Provide default value on error
+Result.Fallback (Default_Person);
+```
+
+#### Recover - Error to Value Conversion
+```ada
+-- Convert specific errors to Ok values
+Result.Recover (Error_To_Default_Value'Access);
+```
+
+#### Tap - Side Effects
+```ada
+-- Perform side effects without changing Result
+Result.Tap (Log_Success'Access);
+```
+
+### 12.2 Windows CI Support
+
+**Platform Support Matrix (v2.0.0):**
+
+| Platform | CI Status | Runtime Status | Notes |
+|----------|-----------|----------------|-------|
+| Linux | ✅ Full | ✅ Full | Primary development platform |
+| macOS | ✅ Full | ✅ Full | Fully supported |
+| Windows | ✅ Full | ✅ Full | Windows 11+ via GitHub Actions |
+| BSD | ⚠️ Manual | ✅ Full | Builds successfully, no CI |
+| Embedded | 🔧 Planned | 🔧 Stub | Custom adapters required |
+
 ---
 
 **Document Control**:
-- Version: 1.0.0
-- Last Updated: 2025-11-27
+- Version: 2.0.0
+- Last Updated: 2025-12-08
 - Status: Released
 - Copyright © 2025 Michael Gardner, A Bit of Help, Inc.
 - License: BSD-3-Clause
 - SPDX-License-Identifier: BSD-3-Clause
+
+**Change History:**
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 2.0.0 | 2025-12-08 | Michael Gardner | Added Result combinators section; Windows CI support; updated test metrics (101 tests) |
+| 1.0.0 | 2025-11-27 | Michael Gardner | Initial release |

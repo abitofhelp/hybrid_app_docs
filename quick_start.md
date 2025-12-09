@@ -1,10 +1,10 @@
 # Hybrid Application Quick Start Guide
 
-**Version:** 1.0.0
-**Date:** December 08, 2025
+**Version:** 2.0.0<br>
+**Date:** 2025-12-08<br>
 **SPDX-License-Identifier:** BSD-3-Clause<br>
 **License File:** See the LICENSE file in the project root<br>
-**Copyright:** 2025 Michael Gardner, A Bit of Help, Inc.<br>
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>
 **Status:** Released
 
 ---
@@ -269,7 +269,7 @@ make test-all
 # Output: Greetings, Alice!
 ```
 
-**Best Practice**: Always run tests after making changes. This project has 90 tests ensuring correctness.
+**Best Practice**: Always run tests after making changes. This project has 101 tests ensuring correctness.
 
 ---
 
@@ -316,6 +316,30 @@ end if;
 | `IO_Error` | Infrastructure I/O operation failed |
 | `Internal_Error` | Unexpected internal error (bug) |
 
+### New in v2.0.0: Result Combinators
+
+The functional ^3.0.0 upgrade brings powerful new combinators:
+
+```ada
+-- Bimap: Transform both Ok and Error values
+Result.Bimap (Ok_Fn => To_Upper, Error_Fn => Add_Context);
+
+-- Ensure: Add validation postconditions
+Result.Ensure (Is_Valid'Access, "Validation failed");
+
+-- With_Context: Add error context
+Result.With_Context ("While processing user input");
+
+-- Fallback: Provide default on error
+Result.Fallback (Default_Value);
+
+-- Recover: Convert errors to Ok values
+Result.Recover (Error_To_Value'Access);
+
+-- Tap: Side effects without changing Result
+Result.Tap (Log_Success'Access);
+```
+
 **Why No Exceptions?**
 
 - Explicit error paths enforced by compiler
@@ -331,10 +355,10 @@ end if;
 
 | Test Type | Count | Location |
 |-----------|-------|----------|
-| Unit Tests | 74 | `test/unit/` |
-| Integration Tests | 8 | `test/integration/` |
-| E2E Tests | 8 | `test/e2e/` |
-| **Total** | **90** | |
+| Unit Tests | 85 | `test/unit/` |
+| Integration Tests | 16 | `test/integration/` |
+| E2E Tests | 0 | `test/e2e/` |
+| **Total** | **101** | |
 
 ### All Tests
 
@@ -361,7 +385,7 @@ make test-e2e
 ########################################
 ###                                  ###
 ###   ALL TEST SUITES: SUCCESS      ###
-###   All tests passed!              ###
+###   All 101 tests passed!          ###
 ###                                  ###
 ########################################
 ```
@@ -565,6 +589,7 @@ cat test/common/test_framework.ads
 - See how Result monads replace exceptions
 - Study error propagation patterns
 - Learn the Application.Error re-export pattern
+- Experiment with new v2.0.0 combinators
 
 ### Learn Dependency Injection
 
@@ -605,6 +630,6 @@ For questions, issues, or contributions:
 ---
 
 **License:** BSD-3-Clause
-**Copyright:** 2025 Michael Gardner, A Bit of Help, Inc.
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.
 
 See [LICENSE](../LICENSE) for full license text.

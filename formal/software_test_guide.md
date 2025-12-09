@@ -1,11 +1,11 @@
 # Software Test Guide
 
-**Version:** 1.0.0<br>
-**Date:** 2025-11-29<br>
+**Version:** 2.0.0  
+**Date:** December 08, 2025  
 **SPDX-License-Identifier:** BSD-3-Clause<br>
 **License File:** See the LICENSE file in the project root<br>
-**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>
-**Status:** Released
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>  
+**Status:** Released  
 
 ---
 
@@ -33,21 +33,21 @@ This document covers:
 
 Hybrid_App_Ada uses three levels of testing:
 
-**Unit Tests** (74 tests)
+**Unit Tests** (85 tests)
 - Test individual components in isolation
 - Focus on Domain and Application logic
 - Pure functions, predictable results
 - Fast execution
 - Location: `test/unit/`
 
-**Integration Tests** (8 tests)
+**Integration Tests** (16 tests)
 - Test cross-layer interactions
 - Real Infrastructure adapters
 - Application use cases with dependencies
 - Verify wiring works correctly
 - Location: `test/integration/`
 
-**End-to-End Tests** (8 tests)
+**End-to-End Tests** (0 tests)
 - Test entire system via CLI
 - Black-box testing
 - User scenarios
@@ -522,13 +522,13 @@ end;
 
 ## 10. Test Statistics
 
-### 10.1 Current Test Metrics (v1.0.0)
+### 10.1 Current Test Metrics (v2.0.0)
 
 **Test Count**:
-- Total: 90 tests
-  - Unit: 74 (82%)
-  - Integration: 8 (9%)
-  - E2E: 8 (9%)
+- Total: 101 tests
+  - Unit: 85 (84%)
+  - Integration: 16 (16%)
+  - E2E: 0 (0%)
 - Pass Rate: 100%
 
 **Coverage by Layer**:
@@ -541,8 +541,8 @@ end;
 **Execution Time**:
 - Unit tests: < 1 second
 - Integration tests: < 1 second
-- E2E tests: < 2 seconds
-- Total: < 5 seconds (all 90 tests)
+- E2E tests: N/A (0 tests)
+- Total: < 3 seconds (all 101 tests)
 
 ---
 
@@ -602,16 +602,80 @@ make check-arch
 
 All must pass:
 - ✅ Zero build warnings
-- ✅ All 90 tests pass (100% pass rate)
+- ✅ All 101 tests pass (100% pass rate)
 - ✅ Architecture validation passes
 - ✅ Exit code 0 from test runners
 
 ---
 
+## 13. Version 2.0.0 Testing Updates
+
+### 13.1 Result Combinator Testing
+
+**New in v2.0.0**: Testing the functional ^3.0.0 combinator operations.
+
+#### Testing Bimap
+```ada
+-- Test transforming both Ok and Error
+Result : constant Person_Result.Result := Create ("alice");
+Mapped : constant String_Result.Result := Result.Bimap (
+   Ok_Fn    => To_Upper'Access,
+   Error_Fn => Add_Prefix'Access
+);
+
+Assert (Is_Ok (Mapped), "Bimap should preserve Ok");
+Assert (Value (Mapped) = "ALICE", "Bimap should transform value");
+```
+
+#### Testing Ensure
+```ada
+-- Test postcondition validation
+Result : constant Person_Result.Result := Create ("Valid Name");
+Checked : constant Person_Result.Result := Result.Ensure (
+   Predicate  => Is_Valid_Person'Access,
+   On_Failure => "Postcondition failed"
+);
+
+Assert (Is_Ok (Checked), "Ensure should pass for valid value");
+```
+
+#### Testing With_Context
+```ada
+-- Test error context enrichment
+Result : constant Person_Result.Result := Create ("");
+Enriched : constant Person_Result.Result :=
+   Result.With_Context ("User registration failed");
+
+Assert (Is_Error (Enriched), "With_Context preserves error state");
+-- Verify context appears in error message
+```
+
+### 13.2 Platform Testing Matrix
+
+**CI Coverage (v2.0.0):**
+
+| Platform | Unit Tests | Integration Tests | E2E Tests | Status |
+|----------|-----------|-------------------|-----------|--------|
+| Linux | ✅ 85/85 | ✅ 16/16 | N/A | Passing |
+| macOS | ✅ 85/85 | ✅ 16/16 | N/A | Passing |
+| Windows | ✅ 85/85 | ✅ 16/16 | N/A | Passing |
+| BSD | Manual | Manual | Manual | Untested in CI |
+
+**New**: Windows CI support via GitHub Actions ensures cross-platform compatibility.
+
+---
+
 **Document Control**:
-- Version: 1.0.0
-- Last Updated: 2025-11-27
+- Version: 2.0.0
+- Last Updated: 2025-12-08
 - Status: Released
 - Copyright © 2025 Michael Gardner, A Bit of Help, Inc.
 - License: BSD-3-Clause
 - SPDX-License-Identifier: BSD-3-Clause
+
+**Change History:**
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 2.0.0 | 2025-12-08 | Michael Gardner | Updated test counts (101 total); added combinator testing section; Windows CI coverage |
+| 1.0.0 | 2025-11-27 | Michael Gardner | Initial release |

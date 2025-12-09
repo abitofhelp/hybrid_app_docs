@@ -1,10 +1,10 @@
 # Software Requirements Specification (SRS)
 
-**Version:** 1.0.0
-**Date:** December 08, 2025
+**Version:** 2.0.0<br>
+**Date:** 2025-12-08<br>
 **SPDX-License-Identifier:** BSD-3-Clause<br>
 **License File:** See the LICENSE file in the project root<br>
-**Copyright:** 2025 Michael Gardner, A Bit of Help, Inc.<br>
+**Copyright:** © 2025 Michael Gardner, A Bit of Help, Inc.<br>
 **Status:** Released
 
 ---
@@ -46,6 +46,7 @@ Hybrid_App_Ada provides:
 - Domain-Driven Design (Eric Evans)
 - Railway-Oriented Programming (Scott Wlaschin)
 - Hexagonal Architecture (Alistair Cockburn)
+- functional crate v3.0.0 documentation
 
 ---
 
@@ -101,6 +102,7 @@ Hybrid_App_Ada is a standalone application implementing hexagonal (ports and ada
 5. **Test Infrastructure**: Custom test framework
 6. **Build Automation**: Comprehensive Makefile
 7. **Formal Verification**: SPARK-compatible domain layer
+8. **Result Combinators**: v2.0.0 adds Bimap, Ensure, With_Context, Fallback, Recover, Tap
 
 ### 2.3 User Classes
 
@@ -207,6 +209,12 @@ Hybrid_App_Ada is a standalone application implementing hexagonal (ports and ada
 | FR-06.5 | Is_Ok/Is_Error predicates |
 | FR-06.6 | Value/Error_Info accessors |
 | FR-06.7 | And_Then_Into for cross-type Result chaining |
+| FR-06.8 | Bimap for transforming both Ok and Error values (v2.0.0) |
+| FR-06.9 | Ensure for postcondition validation (v2.0.0) |
+| FR-06.10 | With_Context for error context enrichment (v2.0.0) |
+| FR-06.11 | Fallback for default values on error (v2.0.0) |
+| FR-06.12 | Recover for converting errors to Ok values (v2.0.0) |
+| FR-06.13 | Tap for side effects without changing Result (v2.0.0) |
 
 ### 3.7 Dependency Injection (FR-07)
 
@@ -442,15 +450,31 @@ User-friendly message displayed
 Exit code 1
 ```
 
+### 8.4 Version 2.0.0 Changes
+
+**Breaking Changes:**
+- Upgraded to functional ^3.0.0 (incompatible with v1.x)
+
+**New Requirements:**
+- FR-06.8 through FR-06.13: Result combinator operations
+- Windows CI support in GitHub Actions
+
+**Test Metrics:**
+- 85 unit tests
+- 16 integration tests
+- 0 e2e tests
+- Total: 101 tests (all passing)
+
 ---
 
 **Document Control:**
-- Version: 1.0.0
-- Last Updated: December 08, 2025
+- Version: 2.0.0
+- Last Updated: 2025-12-08
 - Status: Released
 
 **Change History:**
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-12-08 | Michael Gardner | Aligned with tzif SRS structure; added NFR-06, NFR-07 |
+| 2.0.0 | 2025-12-08 | Michael Gardner | Upgraded to functional ^3.0.0; added Result combinators (FR-06.8-13); updated test counts (101 total) |
+| 1.0.0 | 2025-12-01 | Michael Gardner | Initial release aligned with hybrid architecture |
