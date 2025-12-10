@@ -783,8 +783,8 @@ Result.Tap (Log_Success'Access);
 
 | Platform | CI Status | Runtime Status | Notes |
 |----------|-----------|----------------|-------|
-| Linux | ✅ Full | ✅ Full | Primary development platform |
-| macOS | ✅ Full | ✅ Full | Fully supported |
+| Linux | ✅ Full | ✅ Full | Fully supported |
+| macOS | ✅ Full | ✅ Full | Primary development platform |
 | Windows | ✅ Full | ✅ Full | Windows 11+ via GitHub Actions |
 | BSD | ⚠️ Manual | ✅ Full | Builds successfully, no CI |
 | Embedded | 🔧 Planned | 🔧 Stub | Custom adapters required |
