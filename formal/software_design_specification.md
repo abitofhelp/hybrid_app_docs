@@ -503,6 +503,162 @@ Error Track:    Error → Propagate → Error
 **Purpose**: Allow Domain to change independently
 **Implementation**: Command.Max_DTO_Name_Length (256) vs Domain.Max_Name_Length (100)
 
+### 4.7 Exception Boundary Specification
+
+This section defines the mandatory rules for exception handling across all architectural layers.
+
+#### 4.7.1 Architecture and Exception Flow
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    OUTSIDE WORLD                        │
+│         (User CLI, Files, Network, OS, Hardware)        │
+└─────────────────────────────────────────────────────────┘
+                    ↓ input              ↑ output
+┌─────────────────────────────────────────────────────────┐
+│  PRESENTATION          │         INFRASTRUCTURE         │
+│  (CLI, UI handlers)    │    (Adapters, I/O, External)   │
+│                        │                                │
+│  User input comes in   │    External calls go out       │
+│  ✅ Functional.Try     │    ✅ Functional.Try REQUIRED  │
+│     REQUIRED           │    ❌ Manual exception         │
+│  ❌ Manual exception   │       FORBIDDEN                │
+│     FORBIDDEN          │    Converts exceptions→Result  │
+└─────────────────────────────────────────────────────────┘
+                    ↓                    ↑
+┌─────────────────────────────────────────────────────────┐
+│                    APPLICATION                          │
+│              (Use Cases, Orchestration)                 │
+│                                                         │
+│    ❌ exception keyword FORBIDDEN                       │
+│    Works with Result + Error ONLY                       │
+└─────────────────────────────────────────────────────────┘
+                    ↓                    ↑
+┌─────────────────────────────────────────────────────────┐
+│                      DOMAIN                             │
+│            (Entities, Value Objects, Logic)             │
+│                                                         │
+│    ❌ exception keyword FORBIDDEN                       │
+│    Works with Result + Error ONLY                       │
+│    Self-protecting types prevent invalid states         │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### 4.7.2 Exception Handling Rules by Layer
+
+| Layer | Location | `Functional.Try` | Manual `exception` | Rationale |
+|-------|----------|------------------|-------------------|-----------|
+| **Presentation** | `src/presentation/**` | **REQUIRED** | **FORBIDDEN** | Boundary to user input |
+| **Infrastructure** | `src/infrastructure/**` | **REQUIRED** | **FORBIDDEN** | Boundary to external world |
+| **Domain** | `src/domain/**` | N/A | **FORBIDDEN** | Core logic; Result types only |
+| **Application** | `src/application/**` | N/A | **FORBIDDEN** | Orchestration; Result types only |
+| **Bootstrap** | `src/bootstrap/**` | Optional | **ALLOWED** | Startup may fail fast |
+| **Main** | `**/main.adb`, `greeter.adb` | Optional | **ALLOWED** | Top-level clean exit |
+| **Test** | `test/**` | Optional | **ALLOWED** | Tests may verify exception scenarios |
+
+#### 4.7.3 Required Pattern: Functional.Try at Boundaries
+
+All Infrastructure and Presentation adapters that perform I/O or handle user input **MUST** use `Functional.Try.Try_To_Result` or `Functional.Try.Try_To_Result_With_Param`:
+
+```ada
+with Functional.Try;
+with Ada.Exceptions;
+
+package body Infrastructure.Adapter.Console_Writer is
+   use Ada.Exceptions;
+
+   --  Step 1: Inner function that may raise exceptions
+   function Write_Action (Message : String) return Unit is
+   begin
+      Ada.Text_IO.Put_Line (Message);  -- May raise IO exceptions
+      return Unit_Value;
+   end Write_Action;
+
+   --  Step 2: Exception mapper converts to domain error
+   function Map_Exception
+     (Exc : Exception_Occurrence) return Domain.Error.Error_Type
+   is
+   begin
+      return Domain.Error.Create
+        (Kind    => Domain.Error.IO_Error,
+         Message => "Console write failed: " & Exception_Name (Exc));
+   end Map_Exception;
+
+   --  Step 3: Instantiate Functional.Try wrapper
+   function Write_With_Try is new
+     Functional.Try.Try_To_Result_With_Param
+       (T             => Unit,
+        E             => Domain.Error.Error_Type,
+        Param         => String,
+        Result_Pkg    => Unit_Functional_Result,
+        Map_Exception => Map_Exception,
+        Action        => Write_Action);
+
+   --  Step 4: Public function uses the safe wrapper
+   function Write (Message : String) return Unit_Result.Result is
+   begin
+      return To_Domain_Result (Write_With_Try (Message));
+   end Write;
+
+end Infrastructure.Adapter.Console_Writer;
+```
+
+#### 4.7.4 Prohibited Pattern: Manual Exception Handlers
+
+The following pattern is **FORBIDDEN** in Infrastructure, Presentation, and all core layers:
+
+```ada
+--  ❌ PROHIBITED: Manual exception handling
+function Write (Message : String) return Unit_Result.Result is
+begin
+   Ada.Text_IO.Put_Line (Message);
+   return Unit_Result.Ok (Unit_Value);
+exception
+   when E : others =>
+      return Unit_Result.Error
+        (IO_Error, "Write failed: " & Exception_Message (E));
+end Write;
+```
+
+**Why prohibited:**
+- Inconsistent error mapping across codebase
+- Easy to forget exception handlers
+- No single point of control for exception conversion
+- Violates separation of concerns (I/O action vs error handling)
+- Harder to audit and verify
+
+#### 4.7.5 Core Layer Exception Philosophy
+
+If an exception occurs in Domain or Application layers, it indicates a **BUG**, not a runtime condition to handle:
+
+- **Type definition is wrong** (constraint too narrow)
+- **Validation is missing** at the boundary
+- **Logic error** in the code
+- **SPARK contracts incomplete** (if using SPARK)
+
+Such exceptions should **crash loudly** so the bug can be found and fixed (or proven away with SPARK).
+
+#### 4.7.6 Bootstrap and Main Exceptions
+
+Bootstrap and Main are allowed to use exception handlers for:
+- **Startup failures**: Configuration errors, missing resources
+- **Top-level catch**: Clean error message and exit code
+
+These are out-of-band components that orchestrate but don't contain business logic.
+
+#### 4.7.7 Validation Enforcement
+
+The release preparation script validates these rules:
+
+1. **Infrastructure layer**: Must have `with Functional.Try;` if any I/O operations exist
+2. **Infrastructure layer**: Must NOT have manual `exception` handlers
+3. **Presentation layer**: Must have `with Functional.Try;` if any user input handling exists
+4. **Presentation layer**: Must NOT have manual `exception` handlers
+5. **Domain/Application layers**: Must NOT have `exception` keyword at all
+6. **Bootstrap/Main/Test**: Exempt from validation
+
+Violations cause the release preparation to fail.
+
 ---
 
 ## 5. Data Flow
@@ -803,5 +959,6 @@ Result.Tap (Log_Success'Access);
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 2.0.1 | 2025-12-11 | Michael Gardner | Added Section 4.7 Exception Boundary Specification with architecture diagram, layer rules, required/prohibited patterns |
 | 2.0.0 | 2025-12-08 | Michael Gardner | Added Result combinators section; Windows CI support; updated test metrics (101 tests) |
 | 1.0.0 | 2025-11-27 | Michael Gardner | Initial release |
